@@ -20,3 +20,5 @@ export const formatHora = (fecha?: any) => {
     .format('HH:mm:SS');
   return fechaFormateada;
 };
+
+export const prueba = () => {};
