@@ -24,20 +24,6 @@ export class TicketDto {
   idtematica: number;
 
   /**
-   * Id del Tipo de Ticket
-   */
-  @ApiModelProperty()
-  @IsNotEmpty({
-    message: 'Valor no debe ser nulo',
-  })
-  @IsNumber({
-    allowNaN: false,
-  }, {
-    message: 'El valor tiene que ser numero o entidad TipoTicket',
-  })
-  idtipoticket: number;
-
-  /**
    * Campo preferencial
    */
   @ApiModelProperty()
