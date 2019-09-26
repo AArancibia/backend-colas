@@ -10,15 +10,6 @@ import { AdministradoRO } from '../administrado/administrado.dto';
 export class TicketDto {
 
   /**
-   * Id del Administrado
-   */
-  @ApiModelProperty()
-  @IsNotEmpty({
-    message: 'Valor no debe ser nulo',
-  })
-  idadministrado: number;
-
-  /**
    * Id de la Tematica
    */
   @ApiModelProperty()

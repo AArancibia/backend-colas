@@ -22,22 +22,11 @@ config.set({
 });
 const spawn   = threads.spawn;
 
-/**
- * Servicio del Modulo Ticket
- */
 @Injectable()
 export class TicketService {
 
-  /**
-   * Variable Logger para obtener los log
-   * @var
-   */
   private logger = new Logger( 'TicketService' );
 
-  /**
-   * Constructor de la clase TicketService
-   * @constructor
-   */
   constructor(
     @InjectRepository( Ticket ) private ticketRepository: Repository< Ticket >,
     @InjectRepository( Estado ) private estadoRepository: Repository< Estado >,
@@ -50,13 +39,6 @@ export class TicketService {
     private wsTicket: TicketGateway,
   ) {}
 
-  /**
-   * Servicio para actualizazr idtematica o idtramite del Ticket
-   * @param {number} idticket - Id del Ticket
-   * @param {number} ticket - Ticket a Actualizar
-   * @function actualizarTematicaOrTramite
-   * @returns {Ticket} Ticket actualizado.
-   */
   async actualizarTematicaOrTramite(
     idticket: number,
     ticket: any,
@@ -70,11 +52,6 @@ export class TicketService {
     return ticketActualizado ;
   }
 
-  /**
-   * Servicio para listar Tickets
-   * @function getTickets
-   * @returns {(Ticket|Array)} Lista de Tickets.
-   */
   async getTickets() {
     const tickets = await this.ticketRepository.find({
       relations: [ 'administrado', 'detEstados', 'estados' ],
@@ -97,12 +74,6 @@ export class TicketService {
     return ticketsRO;
   }
 
-  /**
-   * Servicio para actualizazr idtematica o idtramite del Ticket
-   * @param {TicketDto} ticket - Clase TicketDto
-   * @function crearTicket
-   * @returns {Ticket} Nuevo Ticket creado.
-   */
   async crearTicket( ticket: TicketDto ) {
     const { idtipoticket, preferencial, idadministrado, urgente } = ticket;
     const estado = await this.estadoRepository.findOne( { where: { idestado: 1 } });
