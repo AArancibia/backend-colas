@@ -14,3 +14,5 @@ export const formatHora = ( fecha?: any ) => {
   const fechaFormateada =  moment( fecha ? fecha : new Date() ).tz('America/Lima').format( 'HH:mm:SS');
   return fechaFormateada;
 };
+
+export const otraFuncion = () => {}
