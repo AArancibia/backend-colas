@@ -75,7 +75,7 @@ export class TicketService {
   }
 
   async crearTicket(ticket: TicketDto) {
-    const { preferencial, urgente } = ticket;
+    const { preferencial } = ticket;
     const estado = await this.estadoRepository.findOne({
       where: { idestado: 1 },
     });

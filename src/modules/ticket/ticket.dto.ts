@@ -21,7 +21,7 @@ export class TicketDto {
   }, {
     message: 'El valor tiene que ser numero',
   })
-  idtematica: number;
+  idreferencial: number;
 
   /**
    * Campo preferencial
@@ -32,21 +32,6 @@ export class TicketDto {
     message: 'El valor tiene que ser verdadero o falso',
   })
   preferencial: boolean;
-
-  /**
-   * Campo urgente 
-   */
-  @ApiModelProperty()
-  @IsBoolean({
-    message: 'El valor tiene que ser verdadero o falso',
-  })
-  urgente: boolean;
-
-  /**
-   * Id del Tramite
-   */
-  @ApiModelProperty()
-  idtramite?: number;
 
 }
 

@@ -33,6 +33,11 @@ export class Ticket {
   })
   idtramite: number;
 
+  @Column('integer', {
+    nullable: true,
+  })
+  idreferencial: number;
+
   @Column('timestamp', { nullable: false })
   fecha: Date | string;
 
