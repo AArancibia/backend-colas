@@ -8,7 +8,6 @@ import { DetestadoticketModule } from './detestadoticket/detestadoticket.module'
 import { Ticket } from './ticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
-import { Administrado } from '../administrado/administrado.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
@@ -26,14 +25,15 @@ import { Usuario } from '../usuario/usuario.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([
-        Ticket, Estado, Tipoticket,
-        Administrado, Ventanilla,
-        Estadoventanilla,
-        Detestadoventanilla,
-        Detestadoticket,
-        Usuario,
-      ],
-    ),
+      Ticket,
+      Estado,
+      Tipoticket,
+      Ventanilla,
+      Estadoventanilla,
+      Detestadoventanilla,
+      Detestadoticket,
+      Usuario,
+    ]),
     TipoticketModule,
     EstadoticketModule,
     DetestadoticketModule,

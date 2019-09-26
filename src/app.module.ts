@@ -5,10 +5,10 @@ import { AppService } from './app.service';
 import { TicketModule } from './modules/ticket/ticket.module';
 import { VentanillaModule } from './modules/ventanilla/ventanilla.module';
 import { UsuarioModule } from './modules/usuario/usuario.module';
-import { AdministradoModule } from './modules/administrado/administrado.module';
 import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
 import { SocketGateway } from './gateways/socket.gateway';
+import { VentanillareferenciaModule } from './modules/ventanillareferencia/ventanillareferencia.module';
 
 @Module({
   imports: [
@@ -16,10 +16,10 @@ import { SocketGateway } from './gateways/socket.gateway';
     TicketModule,
     VentanillaModule,
     UsuarioModule,
-    AdministradoModule,
     SistradocModule,
     ContribuyenteModule,
     SocketGateway,
+    VentanillareferenciaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

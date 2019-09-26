@@ -1,14 +1,17 @@
-import { IsBoolean, IsEmpty, IsNotEmpty, IsNotIn, IsNumber } from 'class-validator';
+import {
+  IsBoolean,
+  IsEmpty,
+  IsNotEmpty,
+  IsNotIn,
+  IsNumber,
+} from 'class-validator';
 import { ApiModelProperty } from '@nestjs/swagger';
-import { Administrado } from '../administrado/administrado.entity';
-import { AdministradoRO } from '../administrado/administrado.dto';
 
 /**
  * Clase TicketDto - para request en algun controlador
  * @class
  */
 export class TicketDto {
-
   /**
    * Id de la Tematica
    */
@@ -16,11 +19,14 @@ export class TicketDto {
   @IsNotEmpty({
     message: 'Valor no debe ser nulo',
   })
-  @IsNumber({
-    allowNaN: false,
-  }, {
-    message: 'El valor tiene que ser numero',
-  })
+  @IsNumber(
+    {
+      allowNaN: false,
+    },
+    {
+      message: 'El valor tiene que ser numero',
+    },
+  )
   idreferencial: number;
 
   /**
@@ -32,7 +38,6 @@ export class TicketDto {
     message: 'El valor tiene que ser verdadero o falso',
   })
   preferencial: boolean;
-
 }
 
 /**
@@ -90,9 +95,4 @@ export class TicketRO {
    */
   @ApiModelProperty()
   idventanilla: number;
-  /**
-   * Datos del Administrado
-   */
-  @ApiModelProperty()
-  administrado: AdministradoRO;
 }

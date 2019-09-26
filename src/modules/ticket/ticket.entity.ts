@@ -13,7 +13,6 @@ import {
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { Usuario } from '../usuario/usuario.entity';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
-import { Administrado } from '../administrado/administrado.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
@@ -22,16 +21,6 @@ import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 export class Ticket {
   @PrimaryGeneratedColumn()
   id: number;
-
-  @Column('integer', {
-    nullable: true,
-  })
-  idtematica: number;
-
-  @Column('integer', {
-    nullable: true,
-  })
-  idtramite: number;
 
   @Column('integer', {
     nullable: true,
@@ -56,11 +45,6 @@ export class Ticket {
     nullable: false,
   })
   correlativo: number;
-
-  @Column('boolean', {
-    nullable: true,
-  })
-  urgente: boolean;
 
   @Column('date')
   fechacorta: Date | string;
@@ -88,17 +72,9 @@ export class Ticket {
 
   @Column('integer', {
     name: 'idtipoticket',
+    nullable: true,
   })
   idtipoticket: number;
-
-  @ManyToOne(type => Administrado, administrado => administrado.id)
-  @JoinColumn({ name: 'idadministrado' })
-  administrado: Administrado;
-
-  @Column('integer', {
-    name: 'idadministrado',
-  })
-  idadministrado: number;
 
   @RelationId((tickets: Ticket) => tickets.estados)
   estadosIds: number[];

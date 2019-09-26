@@ -6,7 +6,6 @@ import { Between, In, Not, Repository, Transaction } from 'typeorm';
 import { TicketDto } from './ticket.dto';
 import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
-import { Administrado } from '../administrado/administrado.entity';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
@@ -33,8 +32,6 @@ export class TicketService {
     private detEstadoTicketRepository: Repository<Detestadoticket>,
     @InjectRepository(Tipoticket)
     private tipoTicketRepository: Repository<Tipoticket>,
-    @InjectRepository(Administrado)
-    private administradoRepository: Repository<Administrado>,
     @InjectRepository(Ventanilla)
     private ventanillaRepository: Repository<Ventanilla>,
     private ventanillaService: VentanillaService,
@@ -75,21 +72,19 @@ export class TicketService {
   }
 
   async crearTicket(ticket: TicketDto) {
-    const { preferencial } = ticket;
+    const { preferencial, idreferencial } = ticket;
     const estado = await this.estadoRepository.findOne({
       where: { idestado: 1 },
     });
-    //const administrado = await this.administradoRepository.findOne({ where: { id: idadministrado }});
     const nuevoTicket: Ticket = await this.ticketRepository.create({
       ...ticket,
-      //administrado,
       preferencial,
+      idreferencial,
     });
     nuevoTicket.estados = [estado];
-    //const abrTicket = await this.obtenerTipoTicket( idtipoticket );
-    //const correlativo = await this.obtenerCorrelativo( idtipoticket, formatFechaCorta() );
-    //nuevoTicket.correlativo = correlativo;
-    //nuevoTicket.codigo = `${ urgente ? 'U' : '' }${ preferencial ? 'P' : '' }${ abrTicket }-${ correlativo }`;
+    const correlativo = await this.obtenerCorrelativo();
+    nuevoTicket.correlativo = correlativo;
+    nuevoTicket.codigo = `${preferencial ? 'P' : ''}${correlativo}`;
     await this.ticketRepository.save(nuevoTicket);
     await this.detEstadoTicketRepository.update(
       {
@@ -100,7 +95,7 @@ export class TicketService {
     );
     const ticketBD = await this.ticketRepository.findOne({
       where: { id: nuevoTicket.id },
-      relations: ['administrado', 'detEstados', 'estados', 'tipoTicket'],
+      relations: ['detEstados', 'estados', 'tipoTicket'],
     });
     this.wsTicket.ws.emit('[TICKET] Nuevo', ticketBD);
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
@@ -278,38 +273,34 @@ export class TicketService {
   }
 
   async ticketUrgente(idticket: number) {
-    let ticket = await this.ticketRepository.findOne({
-      where: { id: idticket },
-    });
-    if (!ticket)
-      throw new HttpException(
-        `No se encuentra el ticket con id: ${idticket}`,
-        HttpStatus.NOT_FOUND,
-      );
-    const ticketActualizado = await this.ticketRepository.update(
-      { id: idticket },
-      {
-        urgente: true,
-      },
-    );
-    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
-    this.wsTicket.ws.emit('[TICKET] DETESTADO', ticketAEmitir);
-    ticket = await this.ticketRepository.findOne({
-      where: { id: idticket },
-      relations: ['administrado', 'detEstados', 'estados'],
-    });
-    this.wsTicket.ws.emit('[TICKET] URGENTE', ticket);
-    return ticketActualizado;
+    // let ticket = await this.ticketRepository.findOne({
+    //   where: { id: idticket },
+    // });
+    // if (!ticket)
+    //   throw new HttpException(
+    //     `No se encuentra el ticket con id: ${idticket}`,
+    //     HttpStatus.NOT_FOUND,
+    //   );
+    // const ticketActualizado = await this.ticketRepository.update(
+    //   { id: idticket },
+    //   {
+    //     urgente: true,
+    //   },
+    // );
+    // const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    // this.wsTicket.ws.emit('[TICKET] DETESTADO', ticketAEmitir);
+    // ticket = await this.ticketRepository.findOne({
+    //   where: { id: idticket },
+    //   relations: ['administrado', 'detEstados', 'estados'],
+    // });
+    // this.wsTicket.ws.emit('[TICKET] URGENTE', ticket);
+    // return ticketActualizado;
   }
 
-  async obtenerCorrelativo(
-    idtipoticket: number,
-    fechacorta: Date | string,
-  ): Promise<number> {
+  async obtenerCorrelativo(): Promise<number> {
     const ticket = await this.ticketRepository.findOne({
       where: {
-        idtipoticket,
-        fechacorta,
+        fechacorta: formatFechaCorta(),
       },
       select: ['correlativo'],
       order: { correlativo: 'DESC' },
