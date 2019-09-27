@@ -2,12 +2,10 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TicketController } from './ticket.controller';
 import { TicketService } from './ticket.service';
-import { TipoticketModule } from './tipoticket/tipoticket.module';
 import { EstadoticketModule } from './estadoticket/estadoticket.module';
 import { DetestadoticketModule } from './detestadoticket/detestadoticket.module';
 import { Ticket } from './ticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
-import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
@@ -18,6 +16,7 @@ import { Estadoventanilla } from '../ventanilla/estadoventanilla/estadoventanill
 import { Detestadoventanilla } from '../ventanilla/detestadoventanilla/detestadoventanilla.entity';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 import { Usuario } from '../usuario/usuario.entity';
+import { Ventanillareferencia } from '../ventanillareferencia/ventanillareferencia.entity';
 
 /**
  * Modulo de Ticket
@@ -27,14 +26,13 @@ import { Usuario } from '../usuario/usuario.entity';
     TypeOrmModule.forFeature([
       Ticket,
       Estado,
-      Tipoticket,
       Ventanilla,
       Estadoventanilla,
       Detestadoventanilla,
       Detestadoticket,
       Usuario,
+      Ventanillareferencia
     ]),
-    TipoticketModule,
     EstadoticketModule,
     DetestadoticketModule,
     VentanillaModule,

@@ -4,13 +4,13 @@ import { Ticket } from './ticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
 import { Between, In, Not, Repository, Transaction } from 'typeorm';
 import { TicketDto } from './ticket.dto';
-import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { TicketGateway } from '../../gateways/ticket.gateway';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 import { DetestadoticketService } from './detestadoticket/detestadoticket.service';
+import { Ventanillareferencia } from '../ventanillareferencia/ventanillareferencia.entity';
 const threads = require('threads');
 const config = threads.config;
 config.set({
@@ -28,10 +28,10 @@ export class TicketService {
   constructor(
     @InjectRepository(Ticket) private ticketRepository: Repository<Ticket>,
     @InjectRepository(Estado) private estadoRepository: Repository<Estado>,
+    @InjectRepository(Ventanillareferencia)
+    private ventanillaReferenciaRepository: Repository<Ventanillareferencia>,
     @InjectRepository(Detestadoticket)
     private detEstadoTicketRepository: Repository<Detestadoticket>,
-    @InjectRepository(Tipoticket)
-    private tipoTicketRepository: Repository<Tipoticket>,
     @InjectRepository(Ventanilla)
     private ventanillaRepository: Repository<Ventanilla>,
     private ventanillaService: VentanillaService,
@@ -40,18 +40,27 @@ export class TicketService {
   ) {}
 
   async actualizarTematicaOrTramite(idticket: number, ticket: any) {
-    const ticketActualizado = await this.ticketRepository.update(idticket, {
-      idtematica: ticket ? ticket.idtematica : null,
-      idtramite: ticket ? ticket.idtramite : null,
-    });
-    const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
-    this.wsTicket.ws.emit('[TICKET] DETESTADO', ticketAEmitir);
-    return ticketActualizado;
+    // const ticketActualizado = await this.ticketRepository.update(idticket, {
+    //   idtematica: ticket ? ticket.idtematica : null,
+    //   idtramite: ticket ? ticket.idtramite : null,
+    // });
+    // const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
+    // this.wsTicket.ws.emit('[TICKET] DETESTADO', ticketAEmitir);
+    // return ticketActualizado;
+  }
+
+  async encontrarReferencia(data) {
+    const ventanillaReferencia = await this.ventanillaReferenciaRepository.find(
+      {
+        where: data,
+      },
+    );
+    return ventanillaReferencia;
   }
 
   async getTickets() {
     const tickets = await this.ticketRepository.find({
-      relations: ['administrado', 'detEstados', 'estados'],
+      relations: ['detEstados', 'estados'],
       where: {
         fechacorta: formatFechaCorta(),
       },
@@ -76,6 +85,12 @@ export class TicketService {
     const estado = await this.estadoRepository.findOne({
       where: { idestado: 1 },
     });
+    if (!estado)
+      throw new HttpException(
+        `No existe estados en la tabla`,
+        HttpStatus.NOT_FOUND,
+      );
+    this.logger.log(ticket);
     const nuevoTicket: Ticket = await this.ticketRepository.create({
       ...ticket,
       preferencial,
@@ -84,7 +99,7 @@ export class TicketService {
     nuevoTicket.estados = [estado];
     const correlativo = await this.obtenerCorrelativo();
     nuevoTicket.correlativo = correlativo;
-    nuevoTicket.codigo = `${preferencial ? 'P' : ''}${correlativo}`;
+    nuevoTicket.codigo = `A-${preferencial ? 'P' : ''}${correlativo}`;
     await this.ticketRepository.save(nuevoTicket);
     await this.detEstadoTicketRepository.update(
       {
@@ -95,7 +110,7 @@ export class TicketService {
     );
     const ticketBD = await this.ticketRepository.findOne({
       where: { id: nuevoTicket.id },
-      relations: ['detEstados', 'estados', 'tipoTicket'],
+      relations: ['detEstados', 'estados'],
     });
     this.wsTicket.ws.emit('[TICKET] Nuevo', ticketBD);
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
@@ -149,7 +164,7 @@ export class TicketService {
       .execute();
     const ticketActualizado = await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: ['estados', 'administrado', 'detEstados'],
+      relations: ['estados', 'detEstados'],
     });
     this.wsTicket.ws.emit('[TICKET] NUEVO ESTADO', ticketActualizado);
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
@@ -160,7 +175,7 @@ export class TicketService {
   async asignarVentanilla(idticket: number, idventanilla: number) {
     const ticket = await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: ['estados', 'administrado'],
+      relations: ['estados'],
     });
     if (!ticket)
       throw new HttpException(
@@ -199,7 +214,7 @@ export class TicketService {
     );
     const ticketparaEmitir = await await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: ['administrado', 'detEstados'],
+      relations: ['detEstados'],
     });
     const ticketAEmitir = await this.wsTicket.getDetEstadoTicket();
     this.wsTicket.ws.emit('[TICKET] DETESTADO', ticketAEmitir);
@@ -261,7 +276,7 @@ export class TicketService {
     });
     const ticketaEmitir = await this.ticketRepository.findOne({
       where: { id: idticket },
-      relations: ['administrado', 'detEstados'],
+      relations: ['detEstados'],
     });
     this.wsTicket.ws.emit('[TICKET] DERIVADO', {
       ticketaEmitir,

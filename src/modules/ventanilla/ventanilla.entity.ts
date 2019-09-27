@@ -2,6 +2,7 @@ import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, OneToMany
 import { Usuario } from '../usuario/usuario.entity';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { Ticket } from '../ticket/ticket.entity';
+import { Ventanillareferencia } from '../ventanillareferencia/ventanillareferencia.entity';
 
 @Entity( 'tb_ventanilla' )
 export class Ventanilla {
@@ -15,10 +16,8 @@ export class Ventanilla {
   })
   codigoventanilla: string;
 
-  @Column('varchar', {
-    nullable: true,
-  })
-  tipoatencion: string;
+  @OneToMany( type => Ventanillareferencia, ventanillareferencia => ventanillareferencia.ventanilllas )
+  ventanillareferencias: Ventanillareferencia[];
 
   @Column( 'varchar', {
     name: 'ubicacion',

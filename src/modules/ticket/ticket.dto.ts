@@ -33,11 +33,10 @@ export class TicketDto {
    * Campo preferencial
    */
   @ApiModelProperty()
-  @IsNotEmpty()
   @IsBoolean({
     message: 'El valor tiene que ser verdadero o falso',
   })
-  preferencial: boolean;
+  preferencial?: boolean;
 }
 
 /**

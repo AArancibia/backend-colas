@@ -45,7 +45,7 @@ export class TicketGateway {
   async listarTickets(client, data): Promise<any> {
     //WsResponse< TicketRO >
     const tickets = await this.ticketRepository.find({
-      relations: ['estados', 'administrado', 'detEstados', 'tipoTicket'],
+      relations: ['estados', 'detEstados'],
       where: {
         fechacorta: formatFechaCorta(),
       },

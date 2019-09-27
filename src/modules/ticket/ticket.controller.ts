@@ -42,6 +42,14 @@ export class TicketController {
     return this.ticketService.getTickets();
   }
 
+  @Post('/referencia')
+  async buscarReferencia(
+    //@Param('id') idreferencia?: number,
+    @Body() data,
+  ) {
+    return this.ticketService.encontrarReferencia(data);
+  }
+
   /**
    * Servicio para actualizazr idtematica o idtramite del Ticket
    * @param {TicketDto} ticket - Request de Entidad Ticket

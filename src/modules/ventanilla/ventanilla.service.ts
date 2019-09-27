@@ -159,27 +159,21 @@ export class VentanillaService {
     return null;
   }
 
-  /**
-   * Servicio para editar el tipo de Atencion de la Ventanilla
-   * @param {number} idusuario -  Id del Usuario
-   * @function editarTipoAtencion
-   * @returns {Ventanilla} Ventanilla Actualizada.
-   */
   async editarTipoAtencion(id: number, tipoatencion: string) {
-    let ventanillaActualizada = await this.ventanillaRepository.findOne({
-      where: { id },
-      select: ['idusuario', 'codigoventanilla', 'tipoatencion', 'ubicacion'],
-    });
-    await this.ventanillaRepository.update(id, {
-      ...ventanillaActualizada,
-      tipoatencion,
-    });
-    ventanillaActualizada = await this.ventanillaRepository.findOne({
-      where: { id },
-    });
-    const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
-    this.ventanillaGateway.wsVentanilla.emit('[VENTANILLA] LISTA', ventanillas);
-    return ventanillaActualizada;
+    // let ventanillaActualizada = await this.ventanillaRepository.findOne({
+    //   where: { id },
+    //   select: ['idusuario', 'codigoventanilla', 'ubicacion'],
+    // });
+    // await this.ventanillaRepository.update(id, {
+    //   ...ventanillaActualizada,
+    //   tipoatencion,
+    // });
+    // ventanillaActualizada = await this.ventanillaRepository.findOne({
+    //   where: { id },
+    // });
+    // const ventanillas = await this.ventanillaGateway.obtenerVentanillas();
+    // this.ventanillaGateway.wsVentanilla.emit('[VENTANILLA] LISTA', ventanillas);
+    // return ventanillaActualizada;
   }
 
   async ultimoEstadoVentanillas() {

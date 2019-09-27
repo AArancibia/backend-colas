@@ -54,14 +54,13 @@ AS
 			tb_ventanilla.codigoventanilla,
 			tb_ventanilla.ubicacion,
 			tb_ventanilla.idusuario,
-			tb_ventanilla.tipoatencion,
 			t1."tbVentanillaId",
 			t1."tbEstadoventanillaId",
 			t1."identificador",
 			t1."fecha"
 		FROM tb_ventanilla
 			left outer JOIN (
-					select DISTINCT ON ("tbVentanillaId")  * from tb_ventanilla_estados_tb_estadoventanilla
+					select DISTINCT ON ("tbVentanillaId")   * from tb_ventanilla_estados_tb_estadoventanilla
 	where fecha
 						BETWEEN CURRENT_DATE and CURRENT_DATE + INTERVAL
 '1 day'
@@ -72,15 +71,11 @@ AS
 	 left outer join
 ( select
 	ticket.id as idticket,
-	ticket.idtematica,
-	ticket.idtramite,
 	ticket.idventanilla,
 	ticket.codigo,
 	ticket.fecha as fechaticket,
-	ticket.urgente,
 	ticket.preferencial,
-	ticket.idtipoticket,
-	ticket.idadministrado
+	ticket.idreferencial
 from ticket_estados_estadoticket t1
 	inner join ticket
 	on ticket.id = t1."ticketId"
@@ -104,18 +99,10 @@ AS
 		"t1"."ticketId",
 		"t1"."identificador",
 		"t1"."fecha" as detallefecha,
-		"ticket".*,
-		"tb_administrado"."id" as administradoid,
-		"tb_administrado"."nrodoc",
-		"tb_administrado"."nombre",
-		"tb_administrado"."apepat",
-		"tb_administrado"."apemat",
-		"tb_administrado"."idcontribuyente"
+		"ticket".*
 	FROM "ticket_estados_estadoticket" "t1"
 		INNER JOIN "ticket" "ticket"
 		ON "ticket"."id"="t1"."ticketId"
-		INNER JOIN "tb_administrado" "tb_administrado"
-		ON "tb_administrado"."id" = "ticket"."idadministrado"
 	WHERE "t1"."fecha" = (
 										SELECT max( "t2".fecha )
 		FROM "ticket_estados_estadoticket"

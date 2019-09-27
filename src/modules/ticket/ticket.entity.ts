@@ -12,7 +12,6 @@ import {
 } from 'typeorm';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
 import { Usuario } from '../usuario/usuario.entity';
-import { Tipoticket } from './tipoticket/tipoticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
@@ -65,16 +64,6 @@ export class Ticket {
     nullable: true,
   })
   idventanilla: number;
-
-  @ManyToOne(type => Tipoticket, tipoTicket => tipoTicket.idtipoticket)
-  @JoinColumn({ name: 'idtipoticket' })
-  tipoTicket: Tipoticket;
-
-  @Column('integer', {
-    name: 'idtipoticket',
-    nullable: true,
-  })
-  idtipoticket: number;
 
   @RelationId((tickets: Ticket) => tickets.estados)
   estadosIds: number[];
