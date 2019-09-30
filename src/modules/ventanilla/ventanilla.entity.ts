@@ -41,6 +41,11 @@ export class Ventanilla {
   })
   idusuario: number;
 
+  @Column('boolean', {
+    nullable: true,
+  })
+  unica: boolean;
+
   @ManyToMany( type => Estadoventanilla )
   @JoinTable()
   estados: Estadoventanilla[];
