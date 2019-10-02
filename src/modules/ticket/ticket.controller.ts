@@ -6,12 +6,20 @@ import {
   Post,
   Put,
   UseGuards,
+  Res,
+  Header,
 } from '@nestjs/common';
 import { TicketService } from './ticket.service';
 import { Ticket } from './ticket.entity';
 import { TicketDto, TicketRO } from './ticket.dto';
 import { ApiUseTags, ApiResponse, ApiOperation } from '@nestjs/swagger';
 import { AuthGuard } from 'src/shared/guards/auth.guard';
+import * as PDFDocument from 'pdfkit';
+import * as fs from 'fs';
+import { Response } from 'express';
+
+// Para descargar archivo
+var download = require('download-file');
 
 /**
  * Controlador del Modulo Ticket
@@ -22,11 +30,26 @@ import { AuthGuard } from 'src/shared/guards/auth.guard';
 export class TicketController {
   constructor(private ticketService: TicketService) {}
 
-  /**
-   * Controlador para llamar a servicio de listarTickets
-   * @function obtenerTickets
-   * @returns {(Ticket|Array)} Listas de Tickets
-   */
+  @Get('reporte')
+  @Header('Content-Type', 'application/pdf')
+  @Header('Content-Disposition', 'attachment; filename=reporte.pdf')
+  reporte(@Res() response: Response) {
+    const file = __dirname + `/reporte.pdf`;
+    const doc = new PDFDocument({
+      layout: 'portrait',
+      margin: 10,
+      info: {
+        Author: 'Alexis Arancibia Sanchez',
+        Title: 'Reporte de tickets del Dia',
+      },
+    });
+    doc.pipe(fs.createWriteStream(file));
+    doc.text('HelloWorld!');
+    doc.pipe(response);
+    doc.end();
+    return { filemame: file };
+  }
+
   @ApiOperation({
     title: 'Listar Tickets',
     description: 'Consulta para listar tickets de día actual',

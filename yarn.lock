@@ -173,6 +173,13 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-10.14.16.tgz#4d690c96cbb7b2728afea0e260d680501b3da5cf"
   integrity sha512-/opXIbfn0P+VLt+N8DE4l8Mn8rbhiJgabU96ZJ0p9mxOkIks5gh6RUnpHak7Yh0SFkyjO/ODbxsQQPV2bpMmyA==
 
+"@types/pdfkit@^0.10.2":
+  version "0.10.2"
+  resolved "https://registry.yarnpkg.com/@types/pdfkit/-/pdfkit-0.10.2.tgz#22d061c2f73f62b7821c4812ba3e3eafb8e35043"
+  integrity sha512-4n5Ia2fnbjnEwS2uMaJmVLaeCnC/cL8J9xX/QWP3v/L3psRZrqxCMGGFCGq7G4JxJQAVIa3uFn7dxORHeYBczg==
+  dependencies:
+    "@types/node" "*"
+
 "@types/range-parser@*":
   version "1.2.3"
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.3.tgz#7ee330ba7caafb98090bece86a5ee44115904c2c"
@@ -1489,6 +1496,13 @@ dotenv@^8.0.0:
   version "8.1.0"
   resolved "https://registry.yarnpkg.com/dotenv/-/dotenv-8.1.0.tgz#d811e178652bfb8a1e593c6dd704ec7e90d85ea2"
   integrity sha512-GUE3gqcDCaMltj2++g6bRQ5rBJWtkWTmqmD0fo1RnnMuUqHNCt2oTPeDnS9n6fKYvlhn7AeBkb38lymBtWBQdA==
+
+download-file@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/download-file/-/download-file-0.1.5.tgz#ca50ba64d9094b0c8702ef9fff92d2189e141117"
+  integrity sha1-ylC6ZNkJSwyHAu+f/5LSGJ4UERc=
+  dependencies:
+    mkdirp "^0.5.0"
 
 duplexer2@~0.1.4:
   version "0.1.4"

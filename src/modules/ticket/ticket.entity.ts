@@ -24,7 +24,7 @@ export class Ticket {
   @Column('integer', {
     nullable: true,
   })
-  idreferencial: number;
+  idreferencia: number;
 
   @Column('timestamp', { nullable: false })
   fecha: Date | string;

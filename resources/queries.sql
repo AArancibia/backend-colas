@@ -60,7 +60,7 @@ AS
 			t1."fecha"
 		FROM tb_ventanilla
 			left outer JOIN (
-					select DISTINCT ON ("tbVentanillaId")   * from tb_ventanilla_estados_tb_estadoventanilla
+					select DISTINCT ON ("tbVentanillaId")    * from tb_ventanilla_estados_tb_estadoventanilla
 	where fecha
 						BETWEEN CURRENT_DATE and CURRENT_DATE + INTERVAL
 '1 day'
@@ -75,7 +75,7 @@ AS
 	ticket.codigo,
 	ticket.fecha as fechaticket,
 	ticket.preferencial,
-	ticket.idreferencial
+	ticket.idreferencia
 from ticket_estados_estadoticket t1
 	inner join ticket
 	on ticket.id = t1."ticketId"

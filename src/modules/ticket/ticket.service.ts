@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ticket } from './ticket.entity';
 import { Estado } from './estadoticket/estadoticket.entity';
-import { Between, In, Not, Repository, Transaction } from 'typeorm';
+import { Between, In, Not, Repository, Transaction, Connection } from 'typeorm';
 import { TicketDto } from './ticket.dto';
 import { formatFechaCorta, formatFechaLarga } from '../../shared/utils';
 import { Ventanilla } from '../ventanilla/ventanilla.entity';
@@ -11,6 +11,8 @@ import { Detestadoticket } from './detestadoticket/detestadoticket.entity';
 import { VentanillaService } from '../ventanilla/ventanilla.service';
 import { DetestadoticketService } from './detestadoticket/detestadoticket.service';
 import { Ventanillareferencia } from '../ventanillareferencia/ventanillareferencia.entity';
+import * as PDFDocument from 'pdfkit';
+import * as fs from 'fs';
 const threads = require('threads');
 const config = threads.config;
 config.set({
@@ -38,6 +40,23 @@ export class TicketService {
     private detEstadoTicketService: DetestadoticketService,
     private wsTicket: TicketGateway,
   ) {}
+
+  reporteTicket(response: any) {
+    const file = __dirname + `/reporte.pdf`;
+    const doc = new PDFDocument({
+      layout: 'portrait',
+      margin: 10,
+      info: {
+        Author: 'Alexis Arancibia Sanchez',
+        Title: 'Reporte de tickets del Dia',
+      },
+    });
+    doc.pipe(fs.createWriteStream(file));
+    doc.text('HelloWorld!');
+    doc.pipe(response);
+    doc.end();
+    return doc;
+  }
 
   async actualizarTematicaOrTramite(idticket: number, ticket: any) {
     // const ticketActualizado = await this.ticketRepository.update(idticket, {
@@ -81,7 +100,7 @@ export class TicketService {
   }
 
   async crearTicket(ticket: TicketDto) {
-    const { preferencial, idreferencial } = ticket;
+    const { preferencial, idreferencia } = ticket;
     const estado = await this.estadoRepository.findOne({
       where: { idestado: 1 },
     });
@@ -94,7 +113,7 @@ export class TicketService {
     const nuevoTicket: Ticket = await this.ticketRepository.create({
       ...ticket,
       preferencial,
-      idreferencial,
+      idreferencia,
     });
     nuevoTicket.estados = [estado];
     const correlativo = await this.obtenerCorrelativo();

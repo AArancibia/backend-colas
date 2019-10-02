@@ -9,6 +9,7 @@ import { SistradocModule } from './modules/sistradoc/sistradoc.module';
 import { ContribuyenteModule } from './modules/rentas/contribuyente/contribuyente.module';
 import { SocketGateway } from './gateways/socket.gateway';
 import { VentanillareferenciaModule } from './modules/ventanillareferencia/ventanillareferencia.module';
+import { ReferenciaModule } from './modules/referencia/referencia.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { VentanillareferenciaModule } from './modules/ventanillareferencia/venta
     ContribuyenteModule,
     SocketGateway,
     VentanillareferenciaModule,
+    ReferenciaModule,
   ],
   controllers: [AppController],
   providers: [AppService],

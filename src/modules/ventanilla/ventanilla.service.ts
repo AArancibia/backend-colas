@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Ventanilla } from './ventanilla.entity';
-import { Repository } from 'typeorm';
+import { Repository, Connection } from 'typeorm';
 import { Estadoventanilla } from './estadoventanilla/estadoventanilla.entity';
 import { VentanillaDTO } from './ventanilla.dto';
 import { Detestadoventanilla } from './detestadoventanilla/detestadoventanilla.entity';
@@ -19,13 +19,30 @@ export class VentanillaService {
     @InjectRepository(Detestadoventanilla)
     private detEstadoVentanillaRepository: Repository<Detestadoventanilla>,
     private ventanillaGateway: VentanillaGateway,
+    private connection: Connection,
   ) {}
 
-  /**
-   * Servicio para consulta la vista ULTIMOESTADOVENTANILLA de la BD
-   * @function viewVentanillaEstado
-   * @returns {Ventanilla} UltimoEstado de las Ventanillas
-   */
+  async vistaestadoVentanilla() {
+    const builder = await this.connection
+      .createQueryBuilder()
+      .select(['*'])
+      .from(qb => {
+        return qb
+          .subQuery()
+          .select(['*'])
+          .from(Ventanilla, 'ventanilla');
+        // .leftJoin(qb => {
+        //   return qb
+        //     .subQuery()
+        //     .select(['tbestadoventanilla.tbVentanillaId'])
+        //     .from(Detestadoventanilla, 'tbestadoventanilla')
+        //     .getQuery();
+        // }, 't1');
+      }, 'R2')
+      .getSql();
+    return builder;
+  }
+
   async viewVentanillaEstado() {
     const ultimoEstado = await this.ventanillaGateway.ultimoEstadoVentanilla();
     return ultimoEstado;

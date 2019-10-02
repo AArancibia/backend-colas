@@ -27,7 +27,7 @@ export class TicketDto {
       message: 'El valor tiene que ser numero',
     },
   )
-  idreferencial: number;
+  idreferencia: number;
 
   /**
    * Campo preferencial
