@@ -24,6 +24,13 @@ export class UsuarioService {
     return usuarios.map(usuario => usuario.toResponseObject(false));
   }
 
+  async obtenerUsuarioPorId(idusuario: number): Promise<UsuarioRO> {
+    const usuario = await this.usuarioRepository.findOne({
+      where: { idusuario },
+    });
+    return usuario;
+  }
+
   async obtenerUsuarios(): Promise<UsuarioRO[]> {
     const usuarios = await this.usuarioRepository.find();
     return usuarios.map(usuario => usuario.toResponseObject(false));

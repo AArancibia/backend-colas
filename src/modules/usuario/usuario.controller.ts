@@ -57,4 +57,9 @@ export class UsuarioController {
   obtenerUsuarios() {
     return this.usuarioService.obtenerUsuarios();
   }
+
+  @Get('buscar/:id')
+  obtenerUsuarioPorId(@Param('id') idusuario: number) {
+    return this.usuarioService.obtenerUsuarioPorId(idusuario);
+  }
 }
